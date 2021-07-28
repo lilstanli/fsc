@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FS tool</title>
+   <meta name="viewport" content="width=device-width,initial-scale=1" >
+
+  <link href='style.css' rel='stylesheet'>
+<style type=text/css>
+	body {
+  background: #fff;
+  color: #666;
+  padding: 10px;
+  font-family: sans-serif;
+}
+section {
+  display: flex;
+}
+.input_section, .result_section {
+  display: grid;
+  padding: 0 20px;
+}
+
+textarea, input {
+  display: block;
+  margin: 0 0 10px;
+  padding: 10px;
+  color: #666;
+  border-radius: 5px;
+  border: 2px solid #ddd;
+
+}
+input {
+  height: 20px;
+}
+button {
+  color: #fff;
+  background: #666;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  height:40px;
+}
+.final_raw_container {
+  border: dotted 3px #ccc;
+  border-radius: 2px;
+  padding: 10px;
+}
+
+</style>
+	
+
+</head>
+<body>
+  <h2>Add SKU to SN - Asset!</h2>
+  <section>
+    <article class="input_section">
+      <div>
+        <input id="sku" placeholder="add SKU here ...">
+        <textarea id="txtarea" rows="20" cols="30" placeholder="paste text here ..."></textarea>
+        <button id="submitprepdata" onclick="dat(sku, initdata,finalraw)">add sku</button>
+      </div>
+    </article>
+    <article class="result_section">
+      <div class="final_raw_container" id="final_raw_container">
+        <button id="selbtn">select all</button>
+        <button >copy</button>
+        <div>
+          <pre class="rawdata" id="rawdata"></pre>
+        </div>
+      </div>
+    </article>
+  </section>  
+
+  <script>
+	console.clear()
+
+let sku = document.getElementById("sku")
+let initdata = document.getElementById("txtarea")
+let final_raw = document.getElementById("rawdata")
+let final_raw_container = document.getElementById("final_raw_container")
+
+if (final_raw.innerHTML === "") {
+  final_raw_container.style.visibility = "hidden"
+}
+
+let finalraw = document.getElementById("rawdata")
+const dat = (sku, predata, prefin) => {
+  let sku_val = sku.value.trim()
+  predata = predata.value.trim()
+  predata = predata.split("\n")
+  
+  let  t = predata.map(str => str.trim());
+  console.log(t)
+  for (i=0; i<t.length; i++) {
+    if (i%2 === 0) {
+      if (i === 0) {
+        t[i] = sku_val+"\n"+t[i]
+      } else {
+        t[i] = "\n"+sku_val+"\n"+t[i]
+      }
+    } else {
+      t[i] = "\n"+t[i]
+    }
+  }
+    t = t.join("")
+    prefin.innerHTML = t
+
+//show visible results if there is indeed some results
+  if (t.length > 1) {
+    final_raw_container.style.visibility = "visible"
+    } else if (t.length<=1) {
+      final_raw_container.style.visibility = "hidden"
+    }
+    console.log(t.length)
+}
+
+//Select Raw data after result  is printed
+let BtnEle = document.getElementById("selbtn");
+BtnEle.addEventListener("click", () => {
+window.getSelection().selectAllChildren(final_raw);
+});
+
+	</script>
+</body>
+</html>
